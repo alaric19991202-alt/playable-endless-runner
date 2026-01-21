@@ -1,0 +1,16 @@
+{
+  "name": "runner-clone",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "esbuild src/main.ts --bundle --sourcemap --servedir=. --outfile=dist/bundle.js",
+    "build:js": "esbuild src/main.ts --bundle --minify --platform=browser --format=iife --global-name=RunnerGame --outfile=dist/bundle.js",
+    "assets:pack": "node tools/pack-assets-to-window.mjs",
+    "build:html": "node tools/inline-into-html.mjs",
+    "build": "npm run build:js && npm run assets:pack && npm run build:html",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "pixi.js": "^8.0.0"
+  }
+}
