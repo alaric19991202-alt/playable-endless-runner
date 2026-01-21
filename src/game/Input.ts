@@ -1,14 +1,10 @@
-
 export interface InputHandlers {
-
   onJump: () => void;
   onLaneLeft: () => void;
   onLaneRight: () => void;
-
 }
 
 export class Input {
-
   private handlers?: InputHandlers;
   private element?: HTMLElement;
   private pointerDown = false;
@@ -20,7 +16,6 @@ export class Input {
   private blocked = false;
 
   attach(element: HTMLElement, handlers: InputHandlers) {
-
     this.element = element;
     this.handlers = handlers;
     this.element.style.touchAction = "none";
@@ -29,8 +24,9 @@ export class Input {
     this.element.addEventListener("pointerup", this.onPointerUp);
     this.element.addEventListener("pointercancel", this.onPointerUp);
     window.addEventListener("keydown", this.onKeyDown);
-
   }
+
+  update(_deltaSeconds: number) {}
 
   setBlocked(blocked: boolean) {
     if (this.blocked === blocked) {

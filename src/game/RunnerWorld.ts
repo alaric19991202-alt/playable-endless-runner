@@ -303,7 +303,7 @@ export class RunnerWorld {
     this.parallaxLamps = [];
 
     const treeTextures = [this.textures.trees1, this.textures.trees2];
-    const treeCount = Math.ceil(designWidth / 420) + 4;
+    const treeCount = Math.ceil(designWidth / 320) + 5;
     this.treeSpacing = designWidth / (treeCount - 3);
 
     for (let i = 0; i < treeCount; i += 1) {
@@ -316,7 +316,7 @@ export class RunnerWorld {
       this.treeLayer.addChild(sprite);
       this.parallaxTrees.push({
         sprite,
-        speedFactor: 0.25
+        speedFactor: 0.32
       });
     }
 //#endregion

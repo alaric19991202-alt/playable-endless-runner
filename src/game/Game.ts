@@ -1,7 +1,8 @@
+import * as PIXI from "pixi.js";
 import { loadFont, loadTextures } from "./assets";
 import { Input } from "./Input";
 import { RunnerWorld } from "./RunnerWorld";
-import { UI } from "./UI";  
+import { UI } from "./UI";
 
 export class Game {
   app: PIXI.Application;
@@ -37,7 +38,9 @@ export class Game {
     this.app.stage.addChild(this.ui.view);
 
     this.input.attach(this.app.canvas, {
-      onJump: () => this.world.jumpOrRestart()
+      onJump: () => this.world.jumpOrRestart(),
+      onLaneLeft: () => this.world.moveLane(-1),
+      onLaneRight: () => this.world.moveLane(1)
     });
 
     this.resize();
@@ -55,6 +58,7 @@ export class Game {
       this.ui.update(deltaSeconds);
     });
   }
+
   private handleCta() {
     const url = this.ctaUrl ?? this.resolveCtaUrl();
     if (!url) {
@@ -78,7 +82,8 @@ export class Game {
       window.location.href = url;
     }
   }
-   private resolveCtaUrl() {
+
+  private resolveCtaUrl() {
     const win = window as Window & {
       clickTag?: string;
       clickTag1?: string;
@@ -96,5 +101,9 @@ export class Game {
     const w = window.innerWidth;
     const h = window.innerHeight;
     this.app.renderer.resize(w, h);
+    if (this.world && this.ui) {
+      this.world.resize(w, h);
+      this.ui.resize(w, h);
+    }
   }
 }
