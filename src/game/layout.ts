@@ -16,8 +16,6 @@ export function computeLayout(viewWidth: number, viewHeight: number): Layout {
   const isPortrait = viewHeight >= viewWidth;
   const designWidth = viewWidth;
   const designHeight = viewHeight;
-  // const designWidth = isPortrait ? 720 : 1280;
-  // const designHeight = isPortrait ? 1280 : 720;
   const scale = Math.min(viewWidth / designWidth, viewHeight / designHeight);
   const offsetX = (viewWidth - designWidth * scale) / 2;
   const offsetY = (viewHeight - designHeight * scale) / 2;
@@ -34,13 +32,11 @@ export function computeLayout(viewWidth: number, viewHeight: number): Layout {
     isPortrait,
     unit
   };
-  
+
 }
 
 export function applyLayout(container: PIXI.Container, layout: Layout): void { 
 
   container.position.set(layout.offsetX, layout.offsetY);
   container.scale.set(layout.scale);
-  
-
 }
