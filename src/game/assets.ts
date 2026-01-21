@@ -48,26 +48,37 @@ export type AssetKey = keyof typeof assetUrls;
 export type TextureMap = Record<AssetKey, PIXI.Texture>;
 //#region Asset Loading
 export async function loadTextures(): Promise<TextureMap> {
-  const urls = Object.values(assetUrls);
-
-  await PIXI.Assets.load(urls);
-
-  const textures = {} as TextureMap;
+  const embedded = typeof window !== "undefined"
+    ? (window as Window & { __EMBEDDED_ASSETS__?: Partial<Record<AssetKey, string>> })
+      .__EMBEDDED_ASSETS__
+    : undefined;
+  const sources = {} as Record<AssetKey, string>;
   for (const [key, url] of Object.entries(assetUrls)) {
-    textures[key as AssetKey] = PIXI.Assets.get(url) as PIXI.Texture;
+    sources[key as AssetKey] = embedded?.[key as AssetKey] ?? url;
   }
-
+  await PIXI.Assets.load(Object.values(sources));
+  const textures = {} as TextureMap;
+  for (const [key, src] of Object.entries(sources)) {
+    textures[key as AssetKey] = PIXI.Assets.get(src) as PIXI.Texture;
+  }
   return textures;
 }
 
 export async function loadFont(): Promise<void> {
-  const font = new FontFace("PlayFont", "url(assets/Assets/font.ttf)", {
-
+  const embeddedFont = typeof window !== "undefined"
+    ? (window as Window & { __EMBEDDED_FONT__?: string }).__EMBEDDED_FONT__
+    : undefined;
+  const fontSrc = embeddedFont ? `url(${embeddedFont})` : "url(assets/Assets/Font.ttf)";
+  const font = new FontFace("PlayFont", fontSrc, {
     display: "swap"
   });
-
   await font.load();
-
   document.fonts.add(font);
 }
-//#endregion
+
+declare global {
+  interface Window {
+    __EMBEDDED_ASSETS__?: Partial<Record<AssetKey, string>>;
+    __EMBEDDED_FONT__?: string;
+  }
+}
